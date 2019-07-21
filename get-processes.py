@@ -1,6 +1,8 @@
-import sys, unittest
-import Flask
+import psutil, sys, unittest
+import requests
+from prometheus_client import push_to_gateway, CollectorRegistry, Gauge
 
+registry = CollectorRegistry()
 
 class BasicProcess:
     def __init__(self, process_name):
@@ -44,7 +46,6 @@ class ProcessWithArgs(BasicProcess):
                 return False
 
             proc_args = " ".join(cl).lower()
-            #print("checking if {} in {}".format(check_args, proc_args))
             if check_args in proc_args:
                 return True
 
@@ -73,7 +74,7 @@ interesting_things = [
 
     BasicProcess("node_exporter"),
     BasicProcess("prometheus"),
-    BasicProcess("grafana"),
+    BasicProcess("grafana-server"),
     BasicProcess("alertmanager"),
     
     ProcessWithArgs("filewave-web", "httpd", "fwone-django"),
@@ -89,9 +90,15 @@ interesting_things = [
     ProcessWithArgs("filewave-fwserver", "httpd", "filewave-fwserver"),
     ProcessWithArgs("filewave-django", "httpd", "filewave-django"),
     ProcessWithArgs("filewave-dashboard", "httpd", "filewave-dashboard"),
-
 ]
 
 if __name__ == "__main__":
+    # get the metrics, post into the push gateway
+    g = Gauge('filewave_system_running', 'Whether or not parts of the FW system are running or not', ['process_name'], registry=registry)
+
     for thing in interesting_things:
-        print("process: {} is running: {}".format(thing.descriptive_name, thing.get_running()))
+        is_up = thing.get_running()
+        print("{}: {}".format(is_up, thing.descriptive_name))
+        g.labels(process_name=thing.descriptive_name).set(is_up)
+
+    push_to_gateway("http://localhost:9091", job="monitor", registry=registry)
