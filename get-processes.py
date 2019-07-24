@@ -65,7 +65,7 @@ interesting_things = [
 
     BasicProcess("fwldap"),
     BasicProcess("fwzmqbroker"),
-    BasicProcess("redis-server"),
+    ProcessWithArgs("redis-server", "redis-server", "/usr/local/etc/filewave/redis"),
     ProcessWithArgs("fwxserver_a", "fwxserver", "-a"),
     ProcessWithArgs("fwxserver_s", "fwxserver", "-s"),
     ProcessWithArgs("supervisord", "supervisord", ["-C", "/usr/local/etc/filewave"]),
