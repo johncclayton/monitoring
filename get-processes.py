@@ -1,5 +1,4 @@
-import psutil, sys, unittest
-import requests
+import psutil, sys, time
 from prometheus_client import push_to_gateway, CollectorRegistry, Gauge
 
 registry = CollectorRegistry()
@@ -94,11 +93,15 @@ interesting_things = [
 
 if __name__ == "__main__":
     # get the metrics, post into the push gateway
-    g = Gauge('filewave_system_running', 'Whether or not parts of the FW system are running or not', ['process_name'], registry=registry)
+    g = Gauge('filewave_process_running', 'Whether or not parts of the FW system are running or not', ['process_name'], registry=registry)
 
-    for thing in interesting_things:
-        is_up = thing.get_running()
-        print("{}: {}".format(is_up, thing.descriptive_name))
-        g.labels(process_name=thing.descriptive_name).set(is_up)
+    while True:    
 
-    push_to_gateway("http://localhost:9091", job="monitor", registry=registry)
+        for thing in interesting_things:
+            is_up = thing.get_running()
+            #print("{}: {}".format(is_up, thing.descriptive_name))
+            g.labels(process_name=thing.descriptive_name).set(is_up)
+
+        push_to_gateway("http://pushgateway:9091", job="monitor", registry=registry)
+    
+        time.sleep(5)

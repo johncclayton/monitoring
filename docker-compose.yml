@@ -1,0 +1,24 @@
+version: '3.2'
+
+services:
+
+  pushgateway:
+    image: mon-pushgateway:latest
+    ports:
+      - 9091:9091
+    restart: always
+    networks:
+      - monitor
+
+  scrape:
+    image: mon-get-processes:latest
+    privileged: true
+    cap_add:
+      - ALL
+    restart: always
+    networks:
+      - monitor
+
+networks:
+  monitor:
+

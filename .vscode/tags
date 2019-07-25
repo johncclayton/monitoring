@@ -1,0 +1,27 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BasicProcess	../get-processes.py	/^class BasicProcess:$/;"	kind:class	line:7
+CollectorRegistry	../get-processes.py	/^from prometheus_client import push_to_gateway, CollectorRegistry, Gauge$/;"	kind:namespace	line:3
+Gauge	../get-processes.py	/^from prometheus_client import push_to_gateway, CollectorRegistry, Gauge$/;"	kind:namespace	line:3
+PortIsOpen	../get-processes.py	/^class PortIsOpen:$/;"	kind:class	line:54
+ProcessWithArgs	../get-processes.py	/^class ProcessWithArgs(BasicProcess):$/;"	kind:class	line:26
+__init	../get-processes.py	/^    def __init(self, port_number):$/;"	kind:member	line:55
+__init__	../get-processes.py	/^    def __init__(self, desc, name, args):$/;"	kind:member	line:27
+__init__	../get-processes.py	/^    def __init__(self, process_name):$/;"	kind:member	line:8
+g	../get-processes.py	/^    g = Gauge('filewave_system_running', 'Whether or not parts of the FW system are running or not', ['process_name'], registry=registry)$/;"	kind:variable	line:97
+get-processes.py	../get-processes.py	1;"	kind:file	line:1
+get_running	../get-processes.py	/^    def get_running(self):$/;"	kind:member	line:14
+get_running	../get-processes.py	/^    def get_running(self):$/;"	kind:member	line:35
+get_running	../get-processes.py	/^    def get_running(self):$/;"	kind:member	line:59
+interesting_things	../get-processes.py	/^interesting_things = [$/;"	kind:variable	line:63
+lookup_process	../get-processes.py	/^    def lookup_process(self, name):$/;"	kind:member	line:20
+psutil	../get-processes.py	/^import psutil, sys, unittest$/;"	kind:namespace	line:1
+push_to_gateway	../get-processes.py	/^from prometheus_client import push_to_gateway, CollectorRegistry, Gauge$/;"	kind:namespace	line:3
+registry	../get-processes.py	/^registry = CollectorRegistry()$/;"	kind:variable	line:5
+requests	../get-processes.py	/^import requests$/;"	kind:namespace	line:2
+sys	../get-processes.py	/^import psutil, sys, unittest$/;"	kind:namespace	line:1
+unittest	../get-processes.py	/^import psutil, sys, unittest$/;"	kind:namespace	line:1
