@@ -18,6 +18,7 @@ class BasicProcess:
 
     def lookup_process(self, name):
         for p in self.pitr:
+            # print("process name: ", p.name())
             if p.name() == name:
                 yield name, p
         return None, None
@@ -95,13 +96,20 @@ if __name__ == "__main__":
     # get the metrics, post into the push gateway
     g = Gauge('filewave_process_running', 'Whether or not parts of the FW system are running or not', ['process_name'], registry=registry)
 
+    print("Starting!")
+
     while True:    
 
         for thing in interesting_things:
             is_up = thing.get_running()
-            #print("{}: {}".format(is_up, thing.descriptive_name))
+            # print("{}: {}".format(is_up, thing.descriptive_name))
             g.labels(process_name=thing.descriptive_name).set(is_up)
 
-        push_to_gateway("http://pushgateway:9091", job="monitor", registry=registry)
+        try:
+            push_to_gateway("http://pushgateway:9091", job="monitor", registry=registry)
+        except:
+            pass
+
+        print("Scanned")
     
         time.sleep(5)

@@ -6,4 +6,4 @@ RUN apk add --update gcc libc-dev linux-headers python3-dev && pip install -r re
 
 COPY ./get-processes.py /src/
 
-CMD [ "python", "/src/get-processes.py" ]
+CMD [ "python", "-u", "/src/get-processes.py" ]
