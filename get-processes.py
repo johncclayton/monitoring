@@ -1,12 +1,12 @@
-import psutil, sys, time
+import psutil, sys, time, os
 from prometheus_client import push_to_gateway, CollectorRegistry, Gauge
 
 registry = CollectorRegistry()
+processes = list(psutil.process_iter())
 
 class BasicProcess:
     def __init__(self, process_name):
         super().__init__()
-        self.pitr = psutil.process_iter()
         self.process_name = process_name
         self.descriptive_name = process_name
 
@@ -17,11 +17,14 @@ class BasicProcess:
         return False
 
     def lookup_process(self, name):
-        for p in self.pitr:
-            # print("process name: ", p.name())
-            if p.name() == name:
-                yield name, p
+        try:
+            for p in psutil.process_iter():
+                if p.name() == name:
+                    yield name, p
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
         return None, None
+
 
 class ProcessWithArgs(BasicProcess):
     def __init__(self, desc, name, args):
@@ -65,7 +68,7 @@ interesting_things = [
 
     BasicProcess("fwldap"),
     BasicProcess("fwzmqbroker"),
-    ProcessWithArgs("redis-server", "redis-server", "/usr/local/etc/filewave/redis"),
+    ProcessWithArgs("redis-server", "redis-server", "/usr/local/"),
     ProcessWithArgs("fwxserver_a", "fwxserver", "-a"),
     ProcessWithArgs("fwxserver_s", "fwxserver", "-s"),
     ProcessWithArgs("supervisord", "supervisord", ["-C", "/usr/local/etc/filewave"]),
@@ -96,20 +99,21 @@ if __name__ == "__main__":
     # get the metrics, post into the push gateway
     g = Gauge('filewave_process_running', 'Whether or not parts of the FW system are running or not', ['process_name'], registry=registry)
 
-    print("Starting!")
+    host = os.getenv("MON_PUSHGATEWAY_HOST", "localhost")
+    port = os.getenv("MON_PUSHGATEWAY_PORT", "9091")
+
+    print("Starting! Pushing to {0}:{1}".format(host, port))
 
     while True:    
 
         for thing in interesting_things:
             is_up = thing.get_running()
-            # print("{}: {}".format(is_up, thing.descriptive_name))
+            print("{}: {}".format(is_up, thing.descriptive_name))
             g.labels(process_name=thing.descriptive_name).set(is_up)
 
         try:
-            push_to_gateway("http://pushgateway:9091", job="monitor", registry=registry)
+            push_to_gateway("http://{0}:{1}".format(host, port), job="monitor", registry=registry)
         except:
             pass
-
-        print("Scanned")
-    
+   
         time.sleep(5)

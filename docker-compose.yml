@@ -19,6 +19,9 @@ services:
         context: .
     privileged: true
     pid: host
+    environment:
+      - MON_PUSHGATEWAY_HOST=pushgateway
+      - MON_PUSHGATEWAY_PORT=9091
     cap_add:
       - ALL
     restart: always

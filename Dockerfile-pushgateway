@@ -1,12 +1,15 @@
-FROM alpine:latest
+ARG VER=pushgateway-0.9.0.linux-386
+ARG TAR=${VER}.tar.gz
 
-ENV VER=pushgateway-0.9.0.linux-386.tar.gz
-ENV DIR=pushgateway-0.9.0.linux-386
+FROM alpine:latest AS build
+ARG TAR
+RUN wget https://github.com/prometheus/pushgateway/releases/download/v0.9.0/${TAR}
+RUN tar xzf ${TAR}
 
-RUN wget https://github.com/prometheus/pushgateway/releases/download/v0.9.0/$VER 
-RUN tar xzf $VER 
-RUN cp $DIR/pushgateway /usr/local/bin/ 
-
+# and now for the runtime...
+FROM alpine:latest as run
+ARG VER
+COPY --from=build $VER/pushgateway /usr/local/bin/ 
 EXPOSE 9091
 
 CMD [ "/usr/local/bin/pushgateway" ]

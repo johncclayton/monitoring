@@ -1,9 +1,12 @@
-FROM python:3.7-alpine
+FROM python:3.7-alpine AS build
 
 WORKDIR /src
 COPY requirements.txt /src/
-RUN apk add --update gcc libc-dev linux-headers python3-dev && pip install -r requirements.txt && rm -rf /var/cache/apk/*
+RUN apk add --update gcc libc-dev linux-headers python3-dev && pip install --user -r requirements.txt && rm -rf /var/cache/apk/*
 
+FROM python:3.7-alpine
+COPY --from=build /root/.local /root/.local
 COPY ./get-processes.py /src/
 
+ENV PATH=/root/.local/bin:$PATH
 CMD [ "python", "-u", "/src/get-processes.py" ]
