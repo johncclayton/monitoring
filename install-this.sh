@@ -27,14 +27,7 @@ sudo usermod -aG docker `whoami`
 sudo firewall-cmd --permanent --add-port=9091/tcp
 sudo firewall-cmd --reload
 
-if [ -d /etc/cron.d ]; then
-  sudo cp crontab-monitoring /etc/cron.d/
-  echo "Crontab properly installed - enjoy!"
-else
-  echo "Crontab failed to install - monitoring won't poll at intervals"
-fi
-
 sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-docker-compose up --build -d
+echo "Now to run it, log out/in and fire off this command: docker-compose up --build -d"
