@@ -1,16 +1,16 @@
 version: '3.7'
 
 services:
-  pushgateway:
-    image: mon-pushgateway:latest
-    build:
-        dockerfile: Dockerfile-pushgateway
-        context: .
-    ports:
-      - 9091:9091
-    restart: always
-    networks:
-      - monitor
+  # pushgateway:
+  #   image: mon-pushgateway:latest
+  #   build:
+  #       dockerfile: Dockerfile-pushgateway
+  #       context: .
+  #   ports:
+  #     - 9091:9091
+  #   restart: always
+  #   networks:
+  #     - monitor
 
   monitor:
     image: mon-get-processes:latest
@@ -20,7 +20,7 @@ services:
     privileged: true
     pid: host
     environment:
-      - MON_PUSHGATEWAY_HOST=pushgateway
+      - MON_PUSHGATEWAY_HOST=192.168.178.26
       - MON_PUSHGATEWAY_PORT=9091
     cap_add:
       - ALL
