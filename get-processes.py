@@ -100,8 +100,9 @@ if __name__ == "__main__":
     g = Gauge('filewave_process_running', 'Whether or not parts of the FW system are running or not', ['process_name'], registry=registry)
 
     host = os.getenv("MON_PUSHGATEWAY_HOST", "localhost")
-    port = os.getenv("MON_PUSHGATEWAY_PORT", "9091")
-    delay = os.getenv("MON_SECONDS_DELAY_BETWEEN_MONITOR_REQUESTS", 10)
+    port = os.getenv("MON_PUSHGATEWAY_PORT", 9091)
+    jobname = os.getenv("MON_JOBNAME", "monitor")
+    delay = int(os.getenv("MON_SECONDS_DELAY_BETWEEN_MONITOR_REQUESTS", 10))
 
     print("Starting! Pushing to {0}:{1}".format(host, port))
 
@@ -109,11 +110,11 @@ if __name__ == "__main__":
 
         for thing in interesting_things:
             is_up = thing.get_running()
-            print("{}: {}".format(is_up, thing.descriptive_name))
+            print("job: {}, task: {}: {}".format(jobname, is_up, thing.descriptive_name))
             g.labels(process_name=thing.descriptive_name).set(is_up)
 
         try:
-            push_to_gateway("http://{0}:{1}".format(host, port), job="monitor", registry=registry)
+            push_to_gateway("http://{0}:{1}".format(host, port), job=jobname, registry=registry)
         except:
             pass
    

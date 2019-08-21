@@ -1,17 +1,6 @@
 version: '3.7'
 
 services:
-  # pushgateway:
-  #   image: mon-pushgateway:latest
-  #   build:
-  #       dockerfile: Dockerfile-pushgateway
-  #       context: .
-  #   ports:
-  #     - 9091:9091
-  #   restart: always
-  #   networks:
-  #     - monitor
-
   monitor:
     image: mon-get-processes:latest
     build:
@@ -23,6 +12,7 @@ services:
       - MON_PUSHGATEWAY_HOST=192.168.178.26
       - MON_PUSHGATEWAY_PORT=9091
       - MON_SECONDS_DELAY_BETWEEN_MONITOR_REQUESTS=2
+    env_file: monitoring.env
     cap_add:
       - ALL
     restart: always
@@ -31,4 +21,3 @@ services:
 
 networks:
   monitor:
-
