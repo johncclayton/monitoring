@@ -22,6 +22,7 @@ services:
     environment:
       - MON_PUSHGATEWAY_HOST=192.168.178.26
       - MON_PUSHGATEWAY_PORT=9091
+      - MON_SECONDS_DELAY_BETWEEN_MONITOR_REQUESTS=2
     cap_add:
       - ALL
     restart: always

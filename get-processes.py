@@ -101,6 +101,7 @@ if __name__ == "__main__":
 
     host = os.getenv("MON_PUSHGATEWAY_HOST", "localhost")
     port = os.getenv("MON_PUSHGATEWAY_PORT", "9091")
+    delay = os.getenv("MON_SECONDS_DELAY_BETWEEN_MONITOR_REQUESTS", 10)
 
     print("Starting! Pushing to {0}:{1}".format(host, port))
 
@@ -116,4 +117,4 @@ if __name__ == "__main__":
         except:
             pass
    
-        time.sleep(5)
+        time.sleep(delay)
