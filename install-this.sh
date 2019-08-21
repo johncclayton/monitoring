@@ -1,5 +1,12 @@
 #!/bin/bash
 
+JOBNAME="$1"
+if [ -z "$JOBNAME" ]; then
+  echo "use ./install-this.sh <name of exporter job>"
+  echo "e.g ./install-this.sh linux-test"
+  exit 2
+fi
+
 sudo yum remove -y docker \
                    docker-client \
                    docker-client-latest \
@@ -29,5 +36,7 @@ sudo firewall-cmd --reload
 
 sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+echo "MON_JOBNAME=$JOBNAME" > monitoring.env
 
 echo "Now to run it, log out/in and fire off this command: docker-compose up --build -d"
+echo " "
